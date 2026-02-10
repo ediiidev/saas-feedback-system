@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 99%;
+    --foreground: 224 20% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 20% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 20% 12%;
+
+    --primary: 238 60% 56%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 224 20% 12%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 220 14% 96%;
+    --accent-foreground: 224 20% 12%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 238 60% 56%;
+
+    --radius: 0.5rem;
+
+    /* Custom tokens */
+    --success: 152 60% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --badge-pending-bg: 38 92% 95%;
+    --badge-pending-text: 30 80% 30%;
+    --badge-resolved-bg: 152 60% 93%;
+    --badge-resolved-text: 152 60% 25%;
+
+    --badge-saas-bg: 238 60% 95%;
+    --badge-saas-text: 238 60% 40%;
+    --badge-ui-bg: 280 60% 95%;
+    --badge-ui-text: 280 50% 35%;
+    --badge-error-bg: 0 72% 95%;
+    --badge-error-text: 0 60% 35%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 224 25% 6%;
+    --foreground: 220 14% 96%;
+
+    --card: 224 20% 10%;
+    --card-foreground: 220 14% 96%;
+
+    --popover: 224 20% 10%;
+    --popover-foreground: 220 14% 96%;
+
+    --primary: 238 60% 62%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 224 15% 16%;
+    --secondary-foreground: 220 14% 96%;
+
+    --muted: 224 15% 16%;
+    --muted-foreground: 220 9% 55%;
+
+    --accent: 224 15% 16%;
+    --accent-foreground: 220 14% 96%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 224 15% 18%;
+    --input: 224 15% 18%;
+    --ring: 238 60% 62%;
+
+    --badge-pending-bg: 38 50% 15%;
+    --badge-pending-text: 38 80% 70%;
+    --badge-resolved-bg: 152 40% 12%;
+    --badge-resolved-text: 152 60% 65%;
+
+    --badge-saas-bg: 238 40% 15%;
+    --badge-saas-text: 238 60% 72%;
+    --badge-ui-bg: 280 40% 15%;
+    --badge-ui-text: 280 50% 72%;
+    --badge-error-bg: 0 40% 15%;
+    --badge-error-text: 0 60% 72%;
+
+    --sidebar-background: 224 20% 8%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 224 15% 14%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 224 15% 18%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
