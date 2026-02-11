@@ -30,25 +30,36 @@ const FeedbackForm = () => {
   const { addFeedback } = useFeedback();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !category || !comment.trim()) {
-      toast({
-        title: "Campos incompletos",
-        description: "Por favor completa todos los campos antes de enviar.",
-        variant: "destructive",
-      });
-      return;
-    }
 
-    addFeedback({ name: name.trim(), category, comment: comment.trim() });
-    toast({
-      title: "¡Feedback enviado!",
-      description: "Gracias por tu comentario. Lo revisaremos pronto.",
-    });
-    setName("");
-    setCategory("");
-    setComment("");
+    // 1. Preparamos los datos del formulario
+    const formData = {
+      name: name,
+      category: category, // Aquí va si es SaaS, Idea, etc.
+      message: comment    // Tu estado 'comment' es el mensaje
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "¡Feedback enviado!",
+          description: "Se ha guardado tu categoría: " + category,
+        });
+        // Limpiar estados
+        setName("");
+        setCategory("");
+        setComment("");
+      }
+    } catch (error) {
+      console.error("Error al conectar con el backend:", error);
+    }
   };
 
   return (

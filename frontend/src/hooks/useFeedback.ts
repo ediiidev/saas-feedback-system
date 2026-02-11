@@ -1,81 +1,49 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { Feedback, FeedbackCategory } from "@/types/feedback";
-
-const MOCK_FEEDBACKS: Feedback[] = [
-  {
-    id: "1",
-    name: "Carlos Méndez",
-    category: "SaaS",
-    comment: "La integración con Stripe falla al procesar pagos recurrentes. El error aparece en el tercer ciclo de cobro.",
-    status: "Pendiente",
-    createdAt: "2026-02-08T10:30:00Z",
-  },
-  {
-    id: "2",
-    name: "Ana García",
-    category: "UI",
-    comment: "El sidebar se superpone al contenido principal en dispositivos móviles. Afecta la navegación completa.",
-    status: "Resuelto",
-    createdAt: "2026-02-07T14:15:00Z",
-  },
-  {
-    id: "3",
-    name: "Miguel Torres",
-    category: "Error",
-    comment: "Error 500 al intentar exportar reportes en formato CSV. Solo ocurre con datasets mayores a 1000 registros.",
-    status: "Pendiente",
-    createdAt: "2026-02-06T09:45:00Z",
-  },
-  {
-    id: "4",
-    name: "Laura Ruiz",
-    category: "SaaS",
-    comment: "Sería ideal tener un sistema de notificaciones por email cuando un ticket cambia de estado.",
-    status: "Pendiente",
-    createdAt: "2026-02-05T16:20:00Z",
-  },
-  {
-    id: "5",
-    name: "Pedro Sánchez",
-    category: "UI",
-    comment: "Los gráficos del dashboard tardan mucho en cargar. Consideren lazy loading o paginación.",
-    status: "Resuelto",
-    createdAt: "2026-02-04T11:00:00Z",
-  },
-];
+import { useToast } from "@/hooks/use-toast";
 
 export function useFeedback() {
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>(MOCK_FEEDBACKS);
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const { toast } = useToast();
 
-  // TODO: Replace with API call — POST /api/feedbacks
-  const addFeedback = useCallback(
-    (data: { name: string; category: FeedbackCategory; comment: string }) => {
-      const newFeedback: Feedback = {
-        id: crypto.randomUUID(),
-        ...data,
+  // 1. FUNCIÓN PARA CARGAR DATOS (GET)
+  const fetchFeedbacks = useCallback(async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/feedback');
+      const data = await response.json();
+      
+      // Mapeamos los datos de Supabase al formato que espera Lovable
+      const formattedData = data.map((f: any) => ({
+        id: f.id.toString(),
+        name: f.name,
+        category: f.category as FeedbackCategory,
+        comment: f.message, // Supabase usa 'message', Lovable usa 'comment'
         status: "Pendiente",
-        createdAt: new Date().toISOString(),
-      };
-      setFeedbacks((prev) => [newFeedback, ...prev]);
-    },
-    []
-  );
-
-  // TODO: Replace with API call — PATCH /api/feedbacks/:id
-  const markAsResolved = useCallback((id: string) => {
-    setFeedbacks((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, status: "Resuelto" as const } : f))
-    );
+        createdAt: f.created_at
+      }));
+      
+      setFeedbacks(formattedData);
+    } catch (error) {
+      console.error("Error al cargar:", error);
+    }
   }, []);
 
-  // TODO: Replace with API call — GET /api/feedbacks?category=X
-  const getFilteredFeedbacks = useCallback(
-    (category?: FeedbackCategory) => {
-      if (!category) return feedbacks;
-      return feedbacks.filter((f) => f.category === category);
-    },
-    [feedbacks]
-  );
+  // Cargar al iniciar
+  useEffect(() => {
+    fetchFeedbacks();
+  }, [fetchFeedbacks]);
 
-  return { feedbacks, addFeedback, markAsResolved, getFilteredFeedbacks };
+  // 2. FUNCIÓN PARA AGREGAR (POST)
+  // Puedes dejar la que ya tienes o conectarla también aquí
+  const addFeedback = useCallback((data: { name: string; category: FeedbackCategory; comment: string }) => {
+     // Aquí podrías mover la lógica del fetch POST que pusimos en Index.tsx
+     // Por ahora, refresquemos la lista después de enviar
+     fetchFeedbacks();
+  }, [fetchFeedbacks]);
+
+  return {
+    feedbacks,
+    addFeedback,
+    refreshFeedbacks: fetchFeedbacks
+  };
 }
